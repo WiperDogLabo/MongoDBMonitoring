@@ -1,0 +1,8 @@
+JOB = [ name: "MongoDB.Database_Info" ]	
+FETCHACTION={
+	def finalData = [:]
+	// Database info
+	finalData['database_info'] = slurper.parseText(dbMongo.command("listDatabases").toString())
+	return finalData
+}
+DEST = parameters.dest
