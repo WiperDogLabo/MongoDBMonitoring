@@ -1,0 +1,10 @@
+JOB = [ name: "MongoDB.ServerStatus.IOStats" ]	
+FETCHACTION={
+	def finalData = [:]
+	def serverStatusStr = dbMongo.command("serverStatus").toString()
+	def mapDataServerStatus = slurper.parseText(serverStatusStr)
+	finalData['background_flushing'] = mapDataServerStatus['backgroundFlushing']
+	finalData['record_stats'] = mapDataServerStatus['recordStats']
+	return finalData
+}
+DEST = parameters.dest

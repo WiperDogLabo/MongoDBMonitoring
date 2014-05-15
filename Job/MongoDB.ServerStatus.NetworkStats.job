@@ -1,0 +1,12 @@
+JOB = [ name: "MongoDB.ServerStatus.NetworkStats" ]	
+FETCHACTION={
+	def finalData = [:]
+	def serverStatusStr = dbMongo.command("serverStatus").toString()
+	def mapDataServerStatus = slurper.parseText(serverStatusStr)
+	finalData['connections'] = mapDataServerStatus['connections']
+	finalData['network'] = mapDataServerStatus['network']
+	finalData['cursors'] = mapDataServerStatus['cursors']
+	finalData['dur'] = mapDataServerStatus['dur']
+	return finalData
+}
+DEST = parameters.dest

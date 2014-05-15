@@ -1,0 +1,17 @@
+JOB = [ name: "MongoDB.ServerStatus.GeneralInfo" ]	
+FETCHACTION={
+	def finalData = [:]
+	def serverStatusStr = dbMongo.command("serverStatus").toString()
+	def mapDataServerStatus = slurper.parseText(serverStatusStr)
+	finalData['host'] = mapDataServerStatus['host']
+	finalData['version'] = mapDataServerStatus['version']
+	finalData['process'] = mapDataServerStatus['process']
+	finalData['pid'] = mapDataServerStatus['pid']
+	finalData['uptime'] = mapDataServerStatus['uptime']
+	finalData['local_time'] = mapDataServerStatus['localTime']
+	finalData['asserts'] = mapDataServerStatus['asserts']
+	finalData['extra_info'] = mapDataServerStatus['extra_info']
+	finalData['index_counters'] = mapDataServerStatus['indexCounters']
+	return finalData
+}
+DEST = parameters.dest

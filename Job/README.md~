@@ -7,4 +7,9 @@ Prepare to run job:
 		wrapfile,lib/java/bundle.wrap/mongo-java-driver-2.12.1.jar,3,
  - Update defaultJobCaller.groovy: binding dbmongo and json slurper to job
 
-		Others/DefaultJobCaller.groovy
+		runFetchAction method:
+			MongoClient mongo = new MongoClient( "localhost" , 27017 );
+  			DB dbMongo = mongo.getDB("admin");
+			def slurper = new JsonSlurper()
+			binding.setVariable("dbMongo", dbMongo)
+			binding.setVariable("slurper", slurper)
