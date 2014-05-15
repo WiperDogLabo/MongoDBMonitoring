@@ -1,5 +1,7 @@
 package monitor.mongo
 
+@Grab(group='org.mongodb', module='mongo-java-driver', version='2.12.1')
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
