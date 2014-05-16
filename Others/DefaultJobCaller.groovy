@@ -32,7 +32,6 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
-import groovy.json.JsonSlurper;
 
 class DefaultJobCaller {
 	def clsJob
@@ -505,9 +504,6 @@ class DefaultJobCaller {
 		// Mongo client
 		MongoClient mongo = new MongoClient( "localhost" , 27017 );
 		binding.setVariable("mongo", mongo)
-		// Json slurper
-		def slurper = new JsonSlurper()
-		binding.setVariable("slurper", slurper)
 
 		synchronized (mapDBConnections) {
 			//If has data for connect, create connection

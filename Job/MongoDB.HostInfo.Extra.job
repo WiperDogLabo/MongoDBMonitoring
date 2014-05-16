@@ -1,9 +1,8 @@
 JOB = [ name: "MongoDB.HostInfo.Extra" ]	
-FETCHACTION = {
+FETCHACTION={
 	def finalData = [:]
 	def dbMongo = mongo.getDB("admin");
-	def hostInfoStr = dbMongo.command("hostInfo").toString()
-	def mapDataHostInfo = slurper.parseText(hostInfoStr)
+	def mapDataHostInfo = dbMongo.command("hostInfo")
 	finalData['numPagesNum'] = mapDataHostInfo['extra']['numPages']
 	finalData['pageSizeKb'] = mapDataHostInfo['extra']['pageSize'] / 1024
 	return finalData

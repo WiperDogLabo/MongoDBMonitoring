@@ -1,0 +1,20 @@
+JOB = [ name: "MongoDB.Statistics.CollectionInfo" ]	
+FETCHACTION = {
+	def finalData = []
+	def db = mongo.getDB("admin");
+	def listDatabases = db.command("listDatabases")
+	println "listDatabases: " + listDatabases
+	listDatabases['databases'].each {dbName ->
+		def dbMongo = mongo.getDB(dbName['name'])
+		// Get list collection of each database
+		def listCollections = dbMongo.getCollectionNames();
+		// Corresponding each collection, get information of it
+		listCollections.each {collName ->
+			def coll = dbMongo.getCollection(collName)
+			def collInfo = coll.getStats()
+			finalData.add(collInfo)
+		}
+	}
+	return finalData
+}
+DEST = parameters.dest
