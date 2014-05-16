@@ -1,0 +1,16 @@
+JOB = [ name: "MongoDB.HostInfo.System" ]	
+FETCHACTION = {
+	def finalData = [:]
+	def dbMongo = mongo.getDB("admin");
+	def hostInfoStr = dbMongo.command("hostInfo").toString()
+	def mapDataHostInfo = slurper.parseText(hostInfoStr)
+	finalData['currentTimeTm'] = mapDataHostInfo['system']['currentTime']
+	finalData['hostNameNm'] = mapDataHostInfo['system']['hostname']
+	finalData['cpuAddrSizeNum'] = mapDataHostInfo['system']['cpuAddrSize']
+	finalData['memSizeMB'] = mapDataHostInfo['system']['memSizeMB']
+	finalData['numCoresNum'] = mapDataHostInfo['system']['numCores']
+	finalData['cpuArchStr'] = mapDataHostInfo['system']['cpuArch']
+	finalData['numaEnabledBol'] = mapDataHostInfo['system']['numaEnabled']
+	return finalData
+}
+DEST = parameters.dest

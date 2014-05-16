@@ -1,10 +1,7 @@
 Prepare to run job:
- - Copy mongo-java-driver-2.12.1.jar to lib/java/bundle.wrap
+ - Update listBundle.csv to using mongo-java-driver from maven repository:
 
-		Others/mongo-java-driver-2.12.1.jar
- - Update listBundle.csv:
-
-		wrapfile,lib/java/bundle.wrap/mongo-java-driver-2.12.1.jar,3,
+		mvn,org.mongodb:mongo-java-driver:2.12.1,3,
  - Update defaultJobCaller.groovy: binding dbmongo and json slurper to job
 
 		Others/DefaultJobCaller.groovy

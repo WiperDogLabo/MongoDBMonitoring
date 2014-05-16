@@ -1,6 +1,7 @@
 JOB = [ name: "MongoDB.ServerStatus.GeneralInfo" ]	
-FETCHACTION={
+FETCHACTION = {
 	def finalData = [:]
+	def dbMongo = mongo.getDB("admin");
 	def serverStatusStr = dbMongo.command("serverStatus").toString()
 	def mapDataServerStatus = slurper.parseText(serverStatusStr)
 	finalData['host'] = mapDataServerStatus['host']
