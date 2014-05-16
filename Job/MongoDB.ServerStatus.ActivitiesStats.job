@@ -4,8 +4,8 @@ FETCHACTION={
 	def finalData = [:]
 	// Get information of server
 	def dbMongo = mongo.getDB("admin")
-	def serverStatusStr = dbMongo.command("serverStatus").toString()
-	def mapDataServerStatus = slurper.parseText(serverStatusStr)
+	def mapDataServerStatus = dbMongo.command("serverStatus")
+	
 	def tmpOperationsInstanceCounter = [:]
 	if(mapDataServerStatus['opcounters'] != null) {
 		tmpOperationsInstanceCounter['InsertCnt'] = mapDataServerStatus['opcounters']['insert']

@@ -4,8 +4,7 @@ FETCHACTION={
 	def finalData = [:]
 	// Get information of server
 	def dbMongo = mongo.getDB("admin")
-	def serverStatusStr = dbMongo.command("serverStatus").toString()
-	def mapDataServerStatus = slurper.parseText(serverStatusStr)
+	def mapDataServerStatus = dbMongo.command("serverStatus")
 	finalData['MemoryInfo'] = mapDataServerStatus['mem']
 	finalData['MetricsInfo'] = mapDataServerStatus['metrics']
 	return finalData

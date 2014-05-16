@@ -4,8 +4,7 @@ FETCHACTION={
 	def finalData = [:]
 	// Get information of database
 	def dbMongo = mongo.getDB("wiperdog");
-	def dbInfoStr = dbMongo.command("dbStats").toString()
-	def mapDBInfo = slurper.parseText(dbInfoStr)
+	def mapDBInfo = dbMongo.command("dbStats")
 	finalData['DatabaseName'] = mapDBInfo['db']
 	finalData['CollectionsInt'] = mapDBInfo['collections']
 	finalData['ObjectsInt'] = mapDBInfo['objects']
