@@ -1,0 +1,33 @@
+JOB = [ name: "MongoDB.ServerStatus.LockInfo" ]	
+
+FETCHACTION={
+	def finalData = [:]
+	// Get information of server
+	def serverStatusStr = dbMongo.command("serverStatus").toString()
+	def mapDataServerStatus = slurper.parseText(serverStatusStr)	
+	finalData['TotalTimeMs'] = mapDataServerStatus['globalLock']['totalTime'] / 1000
+	finalData['LockTimeMs'] = mapDataServerStatus['globalLock']['lockTime'] / 1000
+
+	def tmpCurrentQueue = [:]
+	if(mapDataServerStatus['globalLock']['currentQueue']!= null) {
+		tmpCurrentQueue['TotalInt'] = mapDataServerStatus['globalLock']['currentQueue']['total']
+		tmpCurrentQueue['ReadersInt'] = mapDataServerStatus['globalLock']['currentQueue']['readers']
+		tmpCurrentQueue['WritesInt'] = mapDataServerStatus['globalLock']['currentQueue']['writers']
+	}
+
+	finalData['CurrentQueue'] = tmpCurrentQueue
+
+	def tmpActiveClients = [:]
+	if(mapDataServerStatus['globalLock']['activeClients']!= null) {
+		tmpActiveClients['TotalInt'] = mapDataServerStatus['globalLock']['activeClients']['total']
+		tmpActiveClients['ReadersInt'] = mapDataServerStatus['globalLock']['activeClients']['readers']
+		tmpActiveClients['WritesInt'] = mapDataServerStatus['globalLock']['activeClients']['writers']
+	}
+
+	finalData['ActiveClients'] = tmpActiveClients
+
+	return finalData
+}
+
+SENDTYPE = "Store"
+DEST = parameters.dest

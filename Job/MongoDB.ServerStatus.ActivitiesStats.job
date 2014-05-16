@@ -1,0 +1,35 @@
+JOB = [ name: "MongoDB.ServerStatus.ActivitiesStats" ]	
+
+FETCHACTION={
+	def finalData = [:]
+	// Get information of server
+	def serverStatusStr = dbMongo.command("serverStatus").toString()
+	def mapDataServerStatus = slurper.parseText(serverStatusStr)
+	def tmpOperationsInstanceCounter = [:]
+	if(mapDataServerStatus['opcounters'] != null) {
+		tmpOperationsInstanceCounter['InsertCnt'] = mapDataServerStatus['opcounters']['insert']
+		tmpOperationsInstanceCounter['QueryCnt'] = mapDataServerStatus['opcounters']['query']
+		tmpOperationsInstanceCounter['UpdateCnt'] = mapDataServerStatus['opcounters']['update'] 
+		tmpOperationsInstanceCounter['DeleteCnt'] = mapDataServerStatus['opcounters']['delete']
+		tmpOperationsInstanceCounter['GetmoreCnt'] = mapDataServerStatus['opcounters']['getmore'] 
+		tmpOperationsInstanceCounter['CommandCnt'] = mapDataServerStatus['opcounters']['command']
+	}
+	finalData['OperationsInstanceCounter'] = tmpOperationsInstanceCounter
+	
+	def tmpOperationsReplicatedCounter = [:]
+	if(mapDataServerStatus['opcountersRepl'] != null) {
+		tmpOperationsReplicatedCounter['InsertCnt'] = mapDataServerStatus['opcountersRepl']['insert']
+		tmpOperationsReplicatedCounter['QueryCnt'] = mapDataServerStatus['opcountersRepl']['query'] 
+		tmpOperationsReplicatedCounter['UpdateCnt'] = mapDataServerStatus['opcountersRepl']['update'] 
+		tmpOperationsReplicatedCounter['DeleteCnt'] = mapDataServerStatus['opcountersRepl']['delete'] 
+		tmpOperationsReplicatedCounter['GetmoreCnt'] = mapDataServerStatus['opcountersRepl']['getmore'] 
+		tmpOperationsReplicatedCounter['CommandCnt'] = mapDataServerStatus['opcountersRepl']['command'] 
+	}
+	finalData['OperationsReplicatedCounter'] = tmpOperationsReplicatedCounter
+
+	return finalData
+}
+
+SENDTYPE = "Store"
+DEST = parameters.dest
+
