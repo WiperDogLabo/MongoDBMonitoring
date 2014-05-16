@@ -1,0 +1,25 @@
+JOB = [ name: "MongoDB.Statistics.DatabaseInfo" ]	
+
+FETCHACTION={
+	def finalData = [:]
+	// Get information of database
+	def dbMongo = mongo.getDB("wiperdog");
+	def dbInfoStr = dbMongo.command("dbStats").toString()
+	def mapDBInfo = slurper.parseText(dbInfoStr)
+	finalData['DatabaseName'] = mapDBInfo['db']
+	finalData['CollectionsInt'] = mapDBInfo['collections']
+	finalData['ObjectsInt'] = mapDBInfo['objects']
+	finalData['AvgObjSizeBytes'] = mapDBInfo['avgObjSize']
+	finalData['DataSizeBytes'] = mapDBInfo['dataSize']
+	finalData['StorageSizeBytes'] = mapDBInfo['storageSize']
+	finalData['NumExtentsInt'] = mapDBInfo['numExtents']
+	finalData['IndexesInt'] = mapDBInfo['indexes']
+	finalData['IndexSizeBytes'] = mapDBInfo['indexSize']
+	finalData['FileSizeBytes'] = mapDBInfo['fileSize']
+	finalData['NameSpaceSizeMB'] = mapDBInfo['nsSizeMB']
+	finalData['DataFileVersion'] = mapDBInfo['dataFileVersion']
+	finalData['ServerUsedStr'] = mapDBInfo['serverUsed']
+	return finalData
+}
+
+DEST = parameters.dest

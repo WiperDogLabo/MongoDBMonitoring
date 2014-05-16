@@ -3,6 +3,7 @@ JOB = [ name: "MongoDB.ServerStatus.ActivitiesStats" ]
 FETCHACTION={
 	def finalData = [:]
 	// Get information of server
+	def dbMongo = mongo.getDB("admin")
 	def serverStatusStr = dbMongo.command("serverStatus").toString()
 	def mapDataServerStatus = slurper.parseText(serverStatusStr)
 	def tmpOperationsInstanceCounter = [:]
@@ -30,6 +31,5 @@ FETCHACTION={
 	return finalData
 }
 
-SENDTYPE = "Store"
 DEST = parameters.dest
 

@@ -3,6 +3,7 @@ JOB = [ name: "MongoDB.ServerStatus.MemoryInfo" ]
 FETCHACTION={
 	def finalData = [:]
 	// Get information of server
+	def dbMongo = mongo.getDB("admin")
 	def serverStatusStr = dbMongo.command("serverStatus").toString()
 	def mapDataServerStatus = slurper.parseText(serverStatusStr)
 	finalData['MemoryInfo'] = mapDataServerStatus['mem']
@@ -10,5 +11,4 @@ FETCHACTION={
 	return finalData
 }
 
-SENDTYPE = "Store"
 DEST = parameters.dest

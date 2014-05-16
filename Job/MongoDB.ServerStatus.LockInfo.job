@@ -3,6 +3,7 @@ JOB = [ name: "MongoDB.ServerStatus.LockInfo" ]
 FETCHACTION={
 	def finalData = [:]
 	// Get information of server
+	def dbMongo = mongo.getDB("admin")
 	def serverStatusStr = dbMongo.command("serverStatus").toString()
 	def mapDataServerStatus = slurper.parseText(serverStatusStr)	
 	finalData['TotalTimeMs'] = mapDataServerStatus['globalLock']['totalTime'] / 1000
@@ -29,5 +30,4 @@ FETCHACTION={
 	return finalData
 }
 
-SENDTYPE = "Store"
 DEST = parameters.dest
