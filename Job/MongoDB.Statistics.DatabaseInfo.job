@@ -1,24 +1,32 @@
 JOB = [ name: "MongoDB.Statistics.DatabaseInfo" ]	
 
 FETCHACTION={
-	def finalData = [:]
 	// Get information of database
-	def dbMongo = mongo.getDB("wiperdog");
-	def mapDBInfo = dbMongo.command("dbStats")
-	finalData['DatabaseName'] = mapDBInfo['db']
-	finalData['CollectionsInt'] = mapDBInfo['collections']
-	finalData['ObjectsInt'] = mapDBInfo['objects']
-	finalData['AvgObjSizeBytes'] = mapDBInfo['avgObjSize']
-	finalData['DataSizeBytes'] = mapDBInfo['dataSize']
-	finalData['StorageSizeBytes'] = mapDBInfo['storageSize']
-	finalData['NumExtentsInt'] = mapDBInfo['numExtents']
-	finalData['IndexesInt'] = mapDBInfo['indexes']
-	finalData['IndexSizeBytes'] = mapDBInfo['indexSize']
-	finalData['FileSizeBytes'] = mapDBInfo['fileSize']
-	finalData['NameSpaceSizeMB'] = mapDBInfo['nsSizeMB']
-	finalData['DataFileVersion'] = mapDBInfo['dataFileVersion']
-	finalData['ServerUsedStr'] = mapDBInfo['serverUsed']
-	return finalData
+	def dbMongo = mongo.getDB("admin")
+	def listDatabases = dbMongo.command("listDatabases")		
+	def mapDBInfo
+	def tmpData
+	def listDBInfo = []
+	// get data of each database
+	listDatabases.databases.each{
+		tmpData = [:]
+		dbMongo = mongo.getDB(it.name)
+		mapDBInfo = dbMongo.command("dbStats")
+		tmpData['DatabaseName'] = mapDBInfo['db']
+		tmpData['CollectionsInt'] = mapDBInfo['collections']
+		tmpData['ObjectsInt'] = mapDBInfo['objects']
+		tmpData['AvgObjSizeBytes'] = mapDBInfo['avgObjSize']
+		tmpData['DataSizeBytes'] = mapDBInfo['dataSize']
+		tmpData['StorageSizeBytes'] = mapDBInfo['storageSize']
+		tmpData['NumExtentsInt'] = mapDBInfo['numExtents']
+		tmpData['IndexesInt'] = mapDBInfo['indexes']
+		tmpData['IndexSizeBytes'] = mapDBInfo['indexSize']
+		tmpData['FileSizeBytes'] = mapDBInfo['fileSize']
+		tmpData['NameSpaceSizeMB'] = mapDBInfo['nsSizeMB']
+		tmpData['DataFileVersion'] = mapDBInfo['dataFileVersion']
+		listDBInfo.add(tmpData)
+	}
+	return listDBInfo
 }
 
 DEST = parameters.dest
