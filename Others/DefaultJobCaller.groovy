@@ -502,14 +502,12 @@ class DefaultJobCaller {
 	def runFetchAction (fetchActionString, dbInfo) {
 		def binding = instanceJob.getBinding()
 		def resultData = null
-		// ======= mogo client
+		// Mongo client
 		MongoClient mongo = new MongoClient( "localhost" , 27017 );
-		DB dbMongo = mongo.getDB("admin");
+		binding.setVariable("mongo", mongo)
 		// Json slurper
 		def slurper = new JsonSlurper()
-		// Binding
 		binding.setVariable("slurper", slurper)
-		binding.setVariable("dbMongo", dbMongo)
 
 		synchronized (mapDBConnections) {
 			//If has data for connect, create connection
