@@ -12,7 +12,20 @@ FETCHACTION = {
 		listCollections.each {collName ->
 			def coll = dbMongo.getCollection(collName)
 			def collInfo = coll.getStats()
-			finalData.add(collInfo)
+			def mapCollectionsInfo = [:]
+			mapCollectionsInfo['serverUsedStr'] = collInfo['serverUsed']
+			mapCollectionsInfo['nsStr'] = collInfo['ns']
+			mapCollectionsInfo['count'] = collInfo['count']
+			mapCollectionsInfo['sizeBytes'] = collInfo['size']
+			mapCollectionsInfo['avgObjSizeBytes'] = collInfo['avgObjSize']
+			mapCollectionsInfo['storageSizeBytes'] = collInfo['storageSize']
+			mapCollectionsInfo['numExtentsNum'] = collInfo['numExtents']
+			mapCollectionsInfo['nindexesNum'] = collInfo['nindexes']
+			mapCollectionsInfo['lastExtentSizeBytes'] = collInfo['lastExtentSize']
+			mapCollectionsInfo['paddingFactorNum'] = collInfo['paddingFactor']
+			mapCollectionsInfo['totalIndexSizeBytes'] = collInfo['totalIndexSize']
+			mapCollectionsInfo['indexSizesBytes'] = collInfo['indexSizes']
+			finalData.add(mapCollectionsInfo)
 		}
 	}
 	return finalData

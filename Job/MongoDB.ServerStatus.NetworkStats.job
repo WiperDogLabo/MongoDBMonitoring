@@ -3,10 +3,40 @@ FETCHACTION={
 	def finalData = [:]
 	def dbMongo = mongo.getDB("admin");
 	def mapDataServerStatus = dbMongo.command("serverStatus")
-	finalData['connections'] = mapDataServerStatus['connections']
-	finalData['network'] = mapDataServerStatus['network']
-	finalData['cursors'] = mapDataServerStatus['cursors']
-	finalData['dur'] = mapDataServerStatus['dur']
+	// Connections
+	def mapConnections = [:]
+	mapConnections['currentNum'] = mapDataServerStatus['connections']['current']
+	mapConnections['availableNum'] = mapDataServerStatus['connections']['available']
+	mapConnections['totalCreatedNum'] = mapDataServerStatus['connections']['totalCreated']
+	finalData['connections'] = mapConnections
+	// Network
+	def mapNetwork = [:]
+	mapNetwork['bytesInBytes'] = mapDataServerStatus['network']['bytesIn']
+	mapNetwork['bytesOutBytes'] = mapDataServerStatus['network']['bytesOut']
+	mapNetwork['numRequestsNum'] = mapDataServerStatus['network']['numRequests']
+	finalData['network'] = mapNetwork
+	// Cursors
+	def mapCursors = [:]
+	mapCursors['totalOpenNum'] = mapDataServerStatus['cursors']['totalOpen']
+	mapCursors['clientCursorsSizeNum'] = mapDataServerStatus['cursors']['clientCursors_size']
+	mapCursors['timedOutNum'] = mapDataServerStatus['cursors']['timedOut']
+	finalData['cursors'] = mapCursors
+	// Dur
+	def mapDur = [:]
+	mapDur['commitsNum'] = mapDataServerStatus['dur']['commits']
+	mapDur['journaledMB'] = mapDataServerStatus['dur']['journaledMB']
+	mapDur['writeToDataFilesMB'] = mapDataServerStatus['dur']['writeToDataFilesMB']
+	mapDur['compressionNum'] = mapDataServerStatus['dur']['compression']
+	mapDur['commitsInWriteLockNum'] = mapDataServerStatus['dur']['commitsInWriteLock']
+	mapDur['earlyCommitsNum'] = mapDataServerStatus['dur']['earlyCommits']
+	def mapTimeMs = [:]
+	mapTimeMs['dtMs'] = mapDataServerStatus['dur']['timeMs']['dt']
+	mapTimeMs['prepLogBufferMs'] = mapDataServerStatus['dur']['timeMs']['prepLogBuffer']
+	mapTimeMs['prepLogBufferMs'] = mapDataServerStatus['dur']['timeMs']['prepLogBuffer']
+	mapTimeMs['writeToDataFilesMs'] = mapDataServerStatus['dur']['timeMs']['writeToDataFiles']
+	mapTimeMs['remapPrivateViewMs'] = mapDataServerStatus['dur']['timeMs']['remapPrivateView']
+	mapDur['timeMs'] = mapTimeMs
+	finalData['dur'] = mapDur
 	return finalData
 }
 DEST = parameters.dest

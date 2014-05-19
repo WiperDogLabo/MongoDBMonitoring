@@ -3,8 +3,25 @@ FETCHACTION={
 	def finalData = [:]
 	def dbMongo = mongo.getDB("admin");
 	def mapDataServerStatus = dbMongo.command("serverStatus")
-	finalData['background_flushing'] = mapDataServerStatus['backgroundFlushing']
-	finalData['record_stats'] = mapDataServerStatus['recordStats']
+	def mapBackgroundFlushing = [:]
+	def mapRecordStats = [:]
+	mapBackgroundFlushing['flushesNum'] = mapDataServerStatus['backgroundFlushing']['flushes']
+	mapBackgroundFlushing['totalMsNum'] = mapDataServerStatus['backgroundFlushing']['total_ms']
+	mapBackgroundFlushing['averageNum'] = mapDataServerStatus['backgroundFlushing']['average']
+	mapBackgroundFlushing['lastMsNum'] = mapDataServerStatus['backgroundFlushing']['last_ms']
+	mapBackgroundFlushing['lastFinishedNum'] = mapDataServerStatus['backgroundFlushing']['last_finished']
+	finalData['background_flushing'] = mapBackgroundFlushing
+	mapRecordStats['accessesNotInMemoryNum'] = mapDataServerStatus['recordStats']['accessesNotInMemory']
+	mapRecordStats['pageFaultExceptionsThrownNum'] = mapDataServerStatus['recordStats']['pageFaultExceptionsThrown']
+	mapDataServerStatus['recordStats'].each {key, value ->
+		if (key != "accessesNotInMemory" && key != "pageFaultExceptionsThrown") {
+			def mapDB = [:]
+			mapDB['accessesNotInMemoryNum'] = value['accessesNotInMemory']
+			mapDB['pageFaultExceptionsThrownNum'] = value['pageFaultExceptionsThrown']
+			mapRecordStats[key] = mapDB
+		}
+	}
+	finalData['record_stats'] = mapRecordStats
 	return finalData
 }
 DEST = parameters.dest

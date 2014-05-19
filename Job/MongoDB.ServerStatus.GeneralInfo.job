@@ -1,17 +1,34 @@
 JOB = [ name: "MongoDB.ServerStatus.GeneralInfo" ]	
-FETCHACTION={
+FETCHACTION = {
 	def finalData = [:]
 	def dbMongo = mongo.getDB("admin");
 	def mapDataServerStatus = dbMongo.command("serverStatus")
-	finalData['host'] = mapDataServerStatus['host']
-	finalData['version'] = mapDataServerStatus['version']
-	finalData['process'] = mapDataServerStatus['process']
-	finalData['pid'] = mapDataServerStatus['pid']
-	finalData['uptime'] = mapDataServerStatus['uptime']
-	finalData['local_time'] = mapDataServerStatus['localTime']
-	finalData['asserts'] = mapDataServerStatus['asserts']
-	finalData['extra_info'] = mapDataServerStatus['extra_info']
-	finalData['index_counters'] = mapDataServerStatus['indexCounters']
+	println mapDataServerStatus
+	finalData['hostStr'] = mapDataServerStatus['host']
+	finalData['versionStr'] = mapDataServerStatus['version']
+	finalData['processStr'] = mapDataServerStatus['process']
+	finalData['pidNum'] = mapDataServerStatus['pid']
+	finalData['uptimeTm'] = mapDataServerStatus['uptime']
+	finalData['localTimeTm'] = mapDataServerStatus['localTime']
+	def mapAssert = [:]
+	def mapExtraInfo = [:]
+	def mapIndexCounters = [:]
+	mapAssert['regularNum'] = mapDataServerStatus['asserts']['regular']
+	mapAssert['warningNum'] = mapDataServerStatus['asserts']['warning']
+	mapAssert['msgNum'] = mapDataServerStatus['asserts']['msg']
+	mapAssert['userNum'] = mapDataServerStatus['asserts']['user']
+	mapAssert['rolloversNum'] = mapDataServerStatus['asserts']['rollovers']
+	finalData['asserts'] = mapAssert
+	mapExtraInfo['noteStr'] = mapDataServerStatus['extra_info']['note']
+	mapExtraInfo['heapUsageBytes'] = mapDataServerStatus['extra_info']['heap_usage_bytes']
+	mapExtraInfo['pageFaultsNum'] = mapDataServerStatus['extra_info']['page_faults']
+	finalData['extra_info'] = mapExtraInfo
+	mapIndexCounters['accessesNum'] = mapDataServerStatus['indexCounters']['accesses']
+	mapIndexCounters['hitsNum'] = mapDataServerStatus['indexCounters']['hits']
+	mapIndexCounters['missesNum'] = mapDataServerStatus['indexCounters']['misses']
+	mapIndexCounters['resetsNum'] = mapDataServerStatus['indexCounters']['resets']
+	mapIndexCounters['missRatioNum'] = mapDataServerStatus['indexCounters']['missRatio']
+	finalData['index_counters'] = mapIndexCounters
 	return finalData
 }
 DEST = parameters.dest

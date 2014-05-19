@@ -5,8 +5,81 @@ FETCHACTION={
 	// Get information of server
 	def dbMongo = mongo.getDB("admin")
 	def mapDataServerStatus = dbMongo.command("serverStatus")
-	finalData['MemoryInfo'] = mapDataServerStatus['mem']
-	finalData['MetricsInfo'] = mapDataServerStatus['metrics']
+	def mapMemoryInfo = [:]
+	def mapMetricsInfo = [:]
+	// Memory info
+	mapMemoryInfo['bitsNum'] = mapDataServerStatus['mem']['bits']
+	mapMemoryInfo['residentMB'] = mapDataServerStatus['mem']['resident']
+	mapMemoryInfo['virtualMB'] = mapDataServerStatus['mem']['virtual']
+	mapMemoryInfo['supportedBol'] = mapDataServerStatus['mem']['supported']
+	mapMemoryInfo['mappedMB'] = mapDataServerStatus['mem']['mapped']
+	mapMemoryInfo['mappedWithJournalMB'] = mapDataServerStatus['mem']['mappedWithJournal']
+	finalData['MemoryInfo'] = mapMemoryInfo
+	// Metrics info
+	// ---- Document
+	def mapDocument = [:]
+	mapDocument['deletedNum'] = mapDataServerStatus['metrics']['document']['deleted']
+	mapDocument['insertedNum'] = mapDataServerStatus['metrics']['document']['inserted']
+	mapDocument['returnedNum'] = mapDataServerStatus['metrics']['document']['returned']
+	mapDocument['updatedNum'] = mapDataServerStatus['metrics']['document']['updated']
+	mapMetricsInfo['document'] = mapDocument
+	// ---- getLastError
+	def mapGetLastError = [:]
+	def mapWTime = [:]
+	mapWTime['num'] = mapDataServerStatus['metrics']['getLastError']['wtime']['num']
+	mapWTime['totalMillisNum'] = mapDataServerStatus['metrics']['getLastError']['wtime']['totalMillis']
+	mapGetLastError['wtime'] = mapWTime
+	mapGetLastError['wtimeoutsNum'] = mapDataServerStatus['metrics']['getLastError']['wtimeouts']
+	mapMetricsInfo['getLastError'] = mapGetLastError
+	// ---- operation
+	def mapOperation = [:]
+	mapOperation['fastmodNum'] = mapDataServerStatus['metrics']['operation']['fastmod']
+	mapOperation['idhackNum'] = mapDataServerStatus['metrics']['operation']['idhack']
+	mapOperation['scanAndOrderNum'] = mapDataServerStatus['metrics']['operation']['scanAndOrder']
+	mapMetricsInfo['operation'] = mapOperation
+	// ---- queryExecutor
+	mapMetricsInfo['queryExecutor'] = ["scannedNum": mapDataServerStatus['metrics']['queryExecutor']['scanned']]
+	// ---- record
+	mapMetricsInfo['record'] = ["movesNum": mapDataServerStatus['metrics']['record']['moves']]
+	// ---- repl
+	def mapRepl = [:]
+	// ---- repl >> apply
+	def mapBatches = [:]
+	mapBatches['num'] = mapDataServerStatus['metrics']['repl']['apply']['batches']['num']
+	mapBatches['totalMillisNum'] = mapDataServerStatus['metrics']['repl']['apply']['batches']['totalMillis']
+	mapRepl['apply'] = ["batches": mapBatches, "opsNum": mapDataServerStatus['metrics']['repl']['apply']['ops']]
+	// ---- repl >> buffer
+	def mapBuffer = [:]
+	mapBatches['countNum'] = mapDataServerStatus['metrics']['repl']['buffer']['count']
+	mapBatches['maxSizeBytesNum'] = mapDataServerStatus['metrics']['repl']['buffer']['maxSizeBytes']
+	mapBatches['sizeBytesNum'] = mapDataServerStatus['metrics']['repl']['buffer']['sizeBytes']
+	mapRepl['buffer'] = mapBatches
+	// ---- repl >> network
+	def mapGetmores = [:]
+	mapGetmores['num'] = mapDataServerStatus['metrics']['repl']['network']['getmores']['num']
+	mapGetmores['totalMillisNum'] = mapDataServerStatus['metrics']['repl']['network']['getmores']['totalMillis']
+	mapRepl['network'] = [:]
+	mapRepl['network']['bytes'] = mapDataServerStatus['metrics']['repl']['network']['bytes']
+	mapRepl['network']['bytes'] = mapGetmores
+	mapRepl['network']['opsNum'] = mapDataServerStatus['metrics']['repl']['network']['ops']
+	mapRepl['network']['readersCreatedNum'] = mapDataServerStatus['metrics']['repl']['network']['readersCreated']
+	// ---- repl >> preload
+	mapRepl['preload'] = [:]
+	mapRepl['preload']['docs'] = [:]
+	mapRepl['preload']['docs']['num'] = mapDataServerStatus['metrics']['repl']['preload']['docs']['num']
+	mapRepl['preload']['docs']['totalMillisNum'] = mapDataServerStatus['metrics']['repl']['preload']['docs']['totalMillis']
+	mapRepl['preload']['indexes'] = [:]
+	mapRepl['preload']['indexes']['num'] = mapDataServerStatus['metrics']['repl']['preload']['indexes']['num']
+	mapRepl['preload']['indexes']['totalMillisNum'] = mapDataServerStatus['metrics']['repl']['preload']['indexes']['totalMillis']
+
+	mapMetricsInfo['repl'] = mapRepl
+	// ---- ttl
+	def mapTTL = [:]
+	mapTTL['deletedDocumentsNum'] = mapDataServerStatus['metrics']['ttl']['deletedDocuments']
+	mapTTL['passesNum'] = mapDataServerStatus['metrics']['ttl']['passes']
+	mapMetricsInfo['ttl'] = mapTTL
+
+	finalData['MetricsInfo'] = mapMetricsInfo
 	return finalData
 }
 

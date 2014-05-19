@@ -23,7 +23,10 @@ FETCHACTION={
 		tmpData['IndexSizeBytes'] = mapDBInfo['indexSize']
 		tmpData['FileSizeBytes'] = mapDBInfo['fileSize']
 		tmpData['NameSpaceSizeMB'] = mapDBInfo['nsSizeMB']
-		tmpData['DataFileVersion'] = mapDBInfo['dataFileVersion']
+		def mapDataFileVersion = [:]
+		mapDataFileVersion['majorNum'] = mapDBInfo['dataFileVersion']['major']
+		mapDataFileVersion['minorNum'] = mapDBInfo['dataFileVersion']['minor']
+		tmpData['DataFileVersion'] = mapDataFileVersion
 		listDBInfo.add(tmpData)
 	}
 	return listDBInfo
