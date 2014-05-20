@@ -1,7 +1,7 @@
 JOB = [ name: "MongoDB.ServerStatus.GeneralInfo" ]	
 FETCHACTION = {
 	def finalData = [:]
-	def dbMongo = mongo.getDB("admin");
+	def dbMongo = sql.gmongo.getDB("admin");
 	def mapDataServerStatus = dbMongo.command("serverStatus")
 	println mapDataServerStatus
 	finalData['hostStr'] = mapDataServerStatus['host']
@@ -22,13 +22,14 @@ FETCHACTION = {
 	mapExtraInfo['noteStr'] = mapDataServerStatus['extra_info']['note']
 	mapExtraInfo['heapUsageBytes'] = mapDataServerStatus['extra_info']['heap_usage_bytes']
 	mapExtraInfo['pageFaultsNum'] = mapDataServerStatus['extra_info']['page_faults']
-	finalData['extra_info'] = mapExtraInfo
+	finalData['extraInfo'] = mapExtraInfo
 	mapIndexCounters['accessesNum'] = mapDataServerStatus['indexCounters']['accesses']
 	mapIndexCounters['hitsNum'] = mapDataServerStatus['indexCounters']['hits']
 	mapIndexCounters['missesNum'] = mapDataServerStatus['indexCounters']['misses']
 	mapIndexCounters['resetsNum'] = mapDataServerStatus['indexCounters']['resets']
 	mapIndexCounters['missRatioNum'] = mapDataServerStatus['indexCounters']['missRatio']
-	finalData['index_counters'] = mapIndexCounters
+	finalData['indexCounters'] = mapIndexCounters
 	return finalData
 }
+DBTYPE = "@MONGODB"
 DEST = parameters.dest

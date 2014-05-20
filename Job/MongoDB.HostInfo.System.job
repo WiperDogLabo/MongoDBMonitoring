@@ -1,7 +1,7 @@
 JOB = [ name: "MongoDB.HostInfo.System" ]	
 FETCHACTION = {
 	def finalData = [:]
-	def dbMongo = mongo.getDB("admin");
+	def dbMongo = sql.gmongo.getDB("admin");
 	def mapDataHostInfo = dbMongo.command("hostInfo")
 	finalData['currentTimeTm'] = mapDataHostInfo['system']['currentTime']
 	finalData['hostNameNm'] = mapDataHostInfo['system']['hostname']
@@ -12,4 +12,5 @@ FETCHACTION = {
 	finalData['numaEnabledBol'] = mapDataHostInfo['system']['numaEnabled']
 	return finalData
 }
+DBTYPE = "@MONGODB"
 DEST = parameters.dest

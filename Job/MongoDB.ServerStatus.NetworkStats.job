@@ -1,7 +1,7 @@
 JOB = [ name: "MongoDB.ServerStatus.NetworkStats" ]	
 FETCHACTION={
 	def finalData = [:]
-	def dbMongo = mongo.getDB("admin");
+	def dbMongo = sql.gmongo.getDB("admin");
 	def mapDataServerStatus = dbMongo.command("serverStatus")
 	// Connections
 	def mapConnections = [:]
@@ -39,4 +39,5 @@ FETCHACTION={
 	finalData['dur'] = mapDur
 	return finalData
 }
+DBTYPE = "@MONGODB"
 DEST = parameters.dest

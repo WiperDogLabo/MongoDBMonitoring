@@ -2,7 +2,7 @@ JOB = [ name: "MongoDB.Statistics.DatabaseInfo" ]
 
 FETCHACTION={
 	// Get information of database
-	def dbMongo = mongo.getDB("admin")
+	def dbMongo = sql.gmongo.getDB("admin")
 	def listDatabases = dbMongo.command("listDatabases")		
 	def mapDBInfo
 	def tmpData
@@ -10,7 +10,7 @@ FETCHACTION={
 	// get data of each database
 	listDatabases.databases.each{
 		tmpData = [:]
-		dbMongo = mongo.getDB(it.name)
+		dbMongo = sql.gmongo.getDB(it.name)
 		mapDBInfo = dbMongo.command("dbStats")
 		tmpData['DatabaseName'] = mapDBInfo['db']
 		tmpData['CollectionsInt'] = mapDBInfo['collections']
@@ -31,5 +31,5 @@ FETCHACTION={
 	}
 	return listDBInfo
 }
-
+DBTYPE = "@MONGODB"
 DEST = parameters.dest

@@ -1,10 +1,11 @@
 JOB = [ name: "MongoDB.HostInfo.Extra" ]	
 FETCHACTION={
 	def finalData = [:]
-	def dbMongo = mongo.getDB("admin");
+	def dbMongo = sql.gmongo.getDB("admin");
 	def mapDataHostInfo = dbMongo.command("hostInfo")
 	finalData['numPagesNum'] = mapDataHostInfo['extra']['numPages']
 	finalData['pageSizeKb'] = mapDataHostInfo['extra']['pageSize'] / 1024
 	return finalData
 }
+DBTYPE = "@MONGODB"
 DEST = parameters.dest

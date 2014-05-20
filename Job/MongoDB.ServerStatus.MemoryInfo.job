@@ -3,7 +3,7 @@ JOB = [ name: "MongoDB.ServerStatus.MemoryInfo" ]
 FETCHACTION={
 	def finalData = [:]
 	// Get information of server
-	def dbMongo = mongo.getDB("admin")
+	def dbMongo = sql.gmongo.getDB("admin")
 	def mapDataServerStatus = dbMongo.command("serverStatus")
 	def mapMemoryInfo = [:]
 	def mapMetricsInfo = [:]
@@ -82,5 +82,5 @@ FETCHACTION={
 	finalData['MetricsInfo'] = mapMetricsInfo
 	return finalData
 }
-
+DBTYPE = "@MONGODB"
 DEST = parameters.dest

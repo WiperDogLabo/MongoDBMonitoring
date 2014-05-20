@@ -3,7 +3,7 @@ JOB = [ name: "MongoDB.ServerStatus.LockInfo" ]
 FETCHACTION={
 	def finalData = [:]
 	// Get information of server
-	def dbMongo = mongo.getDB("admin")
+	def dbMongo = sql.gmongo.getDB("admin")
 	def mapDataServerStatus = dbMongo.command("serverStatus")
 		
 	finalData['TotalTimeMs'] = mapDataServerStatus['globalLock']['totalTime'] / 1000
@@ -29,5 +29,5 @@ FETCHACTION={
 
 	return finalData
 }
-
+DBTYPE = "@MONGODB"
 DEST = parameters.dest

@@ -1,11 +1,12 @@
 JOB = [ name: "MongoDB.HostInfo.Os" ]	
 FETCHACTION={
 	def finalData = [:]
-	def dbMongo = mongo.getDB("admin");
+	def dbMongo = sql.gmongo.getDB("admin");
 	def mapDataHostInfo = dbMongo.command("hostInfo")
 	finalData['nameNm'] = mapDataHostInfo['os']['name']
 	finalData['typeStr'] = mapDataHostInfo['os']['type']
 	finalData['versionStr'] = mapDataHostInfo['os']['version']
 	return finalData
 }
+DBTYPE = "@MONGODB"
 DEST = parameters.dest
