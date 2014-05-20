@@ -1,0 +1,57 @@
+/**
+ * Precondition:
+ * Config to get slow query information in /etc/mongod.conf
+ *     profile = 1
+ *     slowms = 100
+ * Or run command before run job: db.setProfilingLevel(level, slowms), in that: 
+ *     level = 0 => off. No profiling
+ *     level = 1 => on. Only includes "slow" operations
+ *     level = 2 => on. Includes all operations
+ */
+JOB = [ name: "MongoDB.Statistics.SlowQuery" ]	
+
+FETCHACTION = {
+	def finalData = []
+	def db = sql.gmongo.getDB("admin")
+	def listDatabases = db.command("listDatabases")
+	listDatabases['databases'].each { dbName ->
+		def dbMongo = sql.gmongo.getDB(dbName['name'])
+		def collSystemProfile = dbMongo.getCollection("system.profile")
+		collSystemProfile.find().each {row ->
+			if (row['millis'] > -1) {
+				def mapRowSuffix = [:]
+				mapRowSuffix['opStr'] = row['op']
+				mapRowSuffix['nsStr'] = row['ns']
+				if (row['query'] != null) {
+					mapRowSuffix['query'] = row['query']
+				}
+				if (row['command'] != null) {
+					mapRowSuffix['command'] = row['command']
+				}
+				mapRowSuffix['ntoreturnNum'] = row['ntoreturn']
+				mapRowSuffix['ntoskipNum'] = row['ntoskip']
+				mapRowSuffix['nscannedNum'] = row['nscanned']
+				mapRowSuffix['keyUpdatesNum'] = row['keyUpdates']
+				mapRowSuffix['numYieldNum'] = row['numYield']
+				mapRowSuffix['lockStats'] = [:]
+				mapRowSuffix['lockStats']['timeLockedMicros'] = [:]
+				mapRowSuffix['lockStats']['timeLockedMicros']['rNum'] = row['lockStats']['timeLockedMicros']['r']
+				mapRowSuffix['lockStats']['timeLockedMicros']['wNum'] = row['lockStats']['timeLockedMicros']['w']
+				mapRowSuffix['lockStats']['timeAcquiringMicros'] = [:]
+				mapRowSuffix['lockStats']['timeAcquiringMicros']['rNum'] = row['lockStats']['timeAcquiringMicros']['r']
+				mapRowSuffix['lockStats']['timeAcquiringMicros']['rNum'] = row['lockStats']['timeAcquiringMicros']['r']
+				mapRowSuffix['nreturnedNum'] = row['nreturned']
+				mapRowSuffix['responseLengthNum'] = row['responseLength']
+				mapRowSuffix['millisNum'] = row['millis']
+				mapRowSuffix['tsTm'] = row['ts']
+				mapRowSuffix['clientStr'] = row['client']
+				mapRowSuffix['allUsers'] = row['allUsers']
+				mapRowSuffix['userStr'] = row['user']
+				finalData.add(mapRowSuffix)
+			}
+		}
+	}
+	return finalData
+}
+DBTYPE = "@MONGODB"
+DEST = parameters.dest
