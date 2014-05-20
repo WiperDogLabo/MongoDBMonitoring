@@ -1,6 +1,6 @@
 Monitoring MongoDB  
 ----------------------------------------  
-List monitoring for mongodb  
+List monitoring for mongodb (version 2.4.9)
  1. Monitoring information of server  
   - using command mongodb: db.serverStatus()  
   - Jobs monitoring server status of mongodb  
