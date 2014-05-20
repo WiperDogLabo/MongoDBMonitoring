@@ -1,1 +1,1 @@
-Other results.  
+- Please, config job params file and default.params as file attachment.  

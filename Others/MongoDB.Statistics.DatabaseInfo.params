@@ -1,0 +1,7 @@
+[
+	host: "10.0.1.189",
+	port: "27017",
+	db: "wiperdog",
+	user: "",
+	pass: ""
+]
