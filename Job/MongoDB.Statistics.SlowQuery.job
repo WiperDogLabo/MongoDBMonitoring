@@ -14,11 +14,12 @@ FETCHACTION = {
 	def finalData = []
 	def db = sql.gmongo.getDB("admin")
 	def listDatabases = db.command("listDatabases")
+	def slowMsVal = db.command("profile")['slowms']
 	listDatabases['databases'].each { dbName ->
 		def dbMongo = sql.gmongo.getDB(dbName['name'])
 		def collSystemProfile = dbMongo.getCollection("system.profile")
 		collSystemProfile.find().each {row ->
-			if (row['millis'] > -1) {
+			if (row['millis'] > slowMsVal) {
 				def mapRowSuffix = [:]
 				mapRowSuffix['opStr'] = row['op']
 				mapRowSuffix['nsStr'] = row['ns']
