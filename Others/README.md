@@ -1,1 +1,1 @@
-- Please, config job params file and default.params as file attachment.  
+- Please, create job params and default.params as file attachment.  
