@@ -1,7 +1,7 @@
 List monitoring for mongodb (version 2.4.9)  
 ----------------------------------------    
  1. Monitoring information of server (command: db.serverStatus())  
- - The note corresponding to /Others/Note_MonitoringMongoDB.xlsx sheet "ServerStatus"  
+	The note corresponding to /Others/Note_MonitoringMongoDB.xlsx sheet "ServerStatus"  
  1.1. MongoDB.ServerStatus.GeneralInfo.job  
    - get server general informations  
 	+ host (string): the host field contains the system’s hostname.  
@@ -42,7 +42,7 @@ List monitoring for mongodb (version 2.4.9)
 
 
  2. Monitoring host information (command: db.hostInfo())  
- - The note corresponding to /Others/Note_MonitoringMongoDB.xlsx sheet "HostInfo"  
+	The note corresponding to /Others/Note_MonitoringMongoDB.xlsx sheet "HostInfo"  
  2.1. MongoDB.HostInfo.System  
    - About the underlying environment of the system running the mongod or mongos.  
 	+ currentTime (datetime): the current system time.  
